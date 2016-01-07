@@ -30,4 +30,8 @@ class Panda
 
     return false
   end
+
+  def to_s
+    str = "#{@name}, #{email}, #{gender}"
+  end
 end
