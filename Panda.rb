@@ -10,12 +10,12 @@ class Panda
   end
 
   def male?
-    return true if @gender == male
+    return true if @gender == "male"
     return false
   end
 
   def female?
-    return true if @gender == female
+    return true if @gender == "female"
     return false
   end
 
