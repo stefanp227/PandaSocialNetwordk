@@ -34,6 +34,10 @@ class Panda
   def to_s
     str = "#{@name}, #{email}, #{gender}"
   end
+
+  def hash
+    self.to_s.hash
+  end
 end
 
 class PandaSocialNetwork
@@ -49,3 +53,4 @@ class PandaSocialNetwork
     return true if @pandas.any? {|panda| panda == other}
     false
   end
+end
