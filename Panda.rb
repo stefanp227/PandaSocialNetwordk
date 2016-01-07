@@ -35,3 +35,17 @@ class Panda
     str = "#{@name}, #{email}, #{gender}"
   end
 end
+
+class PandaSocialNetwork
+  def initialize()
+    @pandas = []
+  end
+
+  def add_panda(panda)
+    @pandas << panda
+  end
+
+  def has_panda?(other)
+    return true if @pandas.any? {|panda| panda == other}
+    false
+  end
