@@ -10,12 +10,12 @@ class Panda
   end
 
   def male?
-    return true if @gender == male
+    return true if @gender == "male"
     return false
   end
 
   def female?
-    return true if @gender == female
+    return true if @gender == "female"
     return false
   end
 
@@ -29,5 +29,9 @@ class Panda
     end
 
     return false
+  end
+
+  def to_s
+    str = "#{@name}, #{email}, #{gender}"
   end
 end
