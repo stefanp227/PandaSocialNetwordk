@@ -41,6 +41,9 @@ class Panda
 end
 
 class PandaSocialNetwork
+
+  attr_accessor :pandas 
+
   def initialize()
     @pandas = {}
   end
@@ -50,7 +53,7 @@ class PandaSocialNetwork
     @pandas[panda] = []
   end
 
-  def make_friends?(panda1, panda2)
+  def make_friends(panda1, panda2)
     raise "Panda Is not There" unless has_panda?(panda1) and has_panda?(panda2)
     @pandas[panda1] << panda2
     @pandas[panda2] << panda1
@@ -69,5 +72,56 @@ class PandaSocialNetwork
   def friends_of(panda)
     return @pandas[panda] if has_panda?(panda)
     false
+  end
+
+  def bfs(from, to)
+    queue = Queue.new
+    queue.push from
+    visited = [from]
+    #nodes, next_nodes = @panda[from], []
+
+    while !queue.empty?
+      el = queue.shift
+      nodes, next_nodes = @pandas[el], []
+      puts nodes
+      nodes.each do |node|
+        unless visited.any? { |e| e == node }
+          queue << node
+          visited << node
+        end
+      end
+   end
+
+   puts "Program end"
+  end
+
+  def connection_level(from, to)
+    return false unless has_panda?(from) and has_panda?(to)
+    queue, level, visited = Queue.new, 0, [from]
+    queue.push Hash[from, level]
+
+    while !queue.empty?
+      el = queue.shift
+      return el.values.first if el.keys.first == to
+
+      nodes = @pandas[el.keys.first]
+      nodes.each do |node|
+        unless visited.any? { |e| e == node }
+          queue << Hash[node,level+1]
+          visited << node
+        end
+      end
+      level += 1
+   end
+
+   -1
+  end
+
+  def get_nodes(panda)
+    [].tap do |arr|
+      panda.each do |node|
+        arr << node
+      end
+    end
   end
 end
