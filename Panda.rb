@@ -137,10 +137,7 @@ class PandaSocialNetwork
 
     hash = JSON.parse(File.read(file + ".json"))
     hash.each do |key, values|
-      val_pandas = []
-      values.each do |value|
-        val_pandas << Panda.new(*value.split(', '))
-      end
+      val_pandas = values.map { |value| Panda.new(*value.split(', ')) }
       new_hash[Panda.new(*key.split(', '))] = val_pandas
     end
     PandaSocialNetwork.new.tap do |network|
