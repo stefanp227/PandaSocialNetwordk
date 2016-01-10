@@ -42,8 +42,6 @@ end
 
 class PandaSocialNetwork
 
-  require 'json'
-
   attr_accessor :pandas 
 
   def initialize()
@@ -126,26 +124,4 @@ class PandaSocialNetwork
       end
     end
   end
-
-  def save(file)
-    File.open(file + ".json", "w") { |file| file.write(@pandas.to_json) }
-  end
-
-  def self.load(file)
-    
-    new_hash = {}
-
-    hash = JSON.parse(File.read(file + ".json"))
-    hash.each do |key, values|
-      val_pandas = []
-      values.each do |value|
-        val_pandas << Panda.new(*value.split(', '))
-      end
-      new_hash[Panda.new(*key.split(', '))] = val_pandas
-    end
-    PandaSocialNetwork.new.tap do |network|
-      network.pandas = new_hash
-    end
-  end
-
 end
