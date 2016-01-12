@@ -153,6 +153,12 @@ class PandaSocialNetwork
     File.open(file + ".json", "w") { |file| file.write(@pandas.to_json) }
   end
 
+  def new_save(file)
+    format = file.reverse.chars.take_while {|chr| chr != '.'}.join.reverse.to_sym
+    name = file.reverse.chars.drop_while {|chr| chr != '.'}.drop(1).join.reverse
+    Save.new.public_send format, name, @pandas
+  end
+
   def self.load(file)
     
     new_hash = {}
@@ -167,4 +173,26 @@ class PandaSocialNetwork
     end
   end
 
+end
+
+class Save
+
+  require 'json'
+  require 'yaml'
+
+  def xml(instance)
+    File.open(name + ".xml", "w") do |file|
+      file.write instance.to_xml(:root => 'customer')
+    end
+  end
+
+  def yaml(name, instance)
+    File.open(name + ".yaml", "w") do |file|
+      file.write instance.to_yaml
+    end
+  end
+
+  def json(name, instance)
+    File.open(name + ".json", "w") { |file| file.write(instance.to_json) }
+  end
 end
