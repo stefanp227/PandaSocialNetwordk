@@ -97,6 +97,28 @@ class PandaSocialNetwork
    puts "Program end"
   end
 
+  def how_many_gender(level, from, gender)
+    queue = Queue.new
+    queue.push from
+    visited = [from]
+    this_level, count = 0, 0
+    while !queue.empty?
+
+      return count if level == this_level
+
+      el = queue.shift
+      nodes, next_nodes = @pandas[el], []
+      nodes.each do |node|
+        unless visited.any? { |e| e == node }
+          queue << node
+          visited << node
+          count += 1 if node.gender == gender
+        end
+      end
+      this_level += 1
+   end
+  end
+
   def connection_level(from, to)
     return false unless has_panda?(from) and has_panda?(to)
     queue, level, visited = Queue.new, 0, [from]
