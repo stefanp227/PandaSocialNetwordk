@@ -156,7 +156,9 @@ class PandaSocialNetwork
   def new_save(file)
     format = file.reverse.chars.take_while {|chr| chr != '.'}.join.reverse.to_sym
     name = file.reverse.chars.drop_while {|chr| chr != '.'}.drop(1).join.reverse
-    Save.new.public_send format, name, @pandas
+    #Save.new.public_send format, name, @pandas
+    #a = Save.new.method(format).call(name, @pandas)
+    CRUDOperations.new(format, :save, name, @pandas)
   end
 
   def self.load(file)
@@ -173,26 +175,47 @@ class PandaSocialNetwork
     end
   end
 
+  def self.new_load(file)
+    format = file.reverse.chars.take_while {|chr| chr != '.'}.join.reverse.to_sym
+    name = file.reverse.chars.drop_while {|chr| chr != '.'}.drop(1).join.reverse
+    CRUDOperations.new(format, :load, name)
+  end
+
 end
 
-class Save
 
-  require 'json'
-  require 'yaml'
 
-  def xml(instance)
-    File.open(name + ".xml", "w") do |file|
-      file.write instance.to_xml(:root => 'customer')
+
+class CRUDOperations
+  def initialize(format, action, name, *args)
+    @actions = {}.tap do |hash|
+      hash[:save] = args << name
+      hash[:load] = [name]
+    end
+
+    self.method((format.to_s + "_" + action.to_s).to_sym).call(*@actions[action])
+  end
+
+  def json_save(instance, name)
+    File.open(name + ".json", "w") { |file| file.write(instance.to_json) }
+  end
+
+  def json_load(file)
+    new_hash = {}
+
+    hash = JSON.parse(File.read(file + ".json"))
+    hash.each do |key, values|
+      val_pandas = values.map { |value| Panda.new(*value.split(', ')) }
+      new_hash[Panda.new(*key.split(', '))] = val_pandas
+    end
+    PandaSocialNetwork.new.tap do |network|
+      network.pandas = new_hash
     end
   end
 
-  def yaml(name, instance)
+  def yaml_save(instance, name)
     File.open(name + ".yaml", "w") do |file|
       file.write instance.to_yaml
     end
-  end
-
-  def json(name, instance)
-    File.open(name + ".json", "w") { |file| file.write(instance.to_json) }
   end
 end
